@@ -1,6 +1,6 @@
-package No1_No50;
 
-public class LT31
+
+public class LT0031
 {
 	public static void showArray(int[] a)
 	{

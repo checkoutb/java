@@ -1,7 +1,7 @@
-package No451_No500;
 
 
-public class LT461
+
+public class LT0461
 {
 	public static void main(String[] args)
 	{
