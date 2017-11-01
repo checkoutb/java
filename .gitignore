@@ -1,0 +1,6 @@
+build
+.settings
+WebContent
+.classpath
+.project
+target
