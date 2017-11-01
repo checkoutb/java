@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+<!--
+  ~ Hibernate, Relational Persistence for Idiomatic Java
+  ~
+  ~ License: GNU Lesser General Public License (LGPL), version 2.1 or later.
+  ~ See the lgpl.txt file in the root directory or <http://www.gnu.org/licenses/lgpl-2.1.html>.
+  -->
+<!DOCTYPE hibernate-mapping
+        SYSTEM
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd" >
+
+<hibernate-mapping package="com.wb.model">
+
+    <class name="PersonImpl" table="person" proxy="Person">
+        <id name="id" column="person_id" unsaved-value="0"> <!-- hibernate hasn't int, use integer --> <!-- 这里用的是int，要是Integer的话就可以写null了 -->
+            <generator class="assigned" />      <!-- native没办法保存数据，主要是native发出的sql没有id这个列 -->
+                                                <!-- if increment,sql won't insert the id,it will use the next of the max id in table -->
+                                                <!-- assigned,need set the id by yourself,or it will insert id=0, -->
+        </id>
+
+        <property name="name" column="person_name" />       <!-- hibernate:string, not String -->
+        <property name="age" column="person_age" />
+        <property name="phoneNumber" column="person_tel" />
+        <property name="sex" column="person_sex" />     <!-- hibernate has char?no, has character -->
+<!--        <property name="planet" column="planet_id" /> --> <!-- just test -->
+        <many-to-one name="planet" class="PlanetImpl" column="planet_id" cascade="all" />   <!-- many2one中不能出现inverse -->
+                                          <!-- 默认是lazy="true",,,, cascade="save-update"  -->
+        
+        
+        <!-- <property name="effectiveStartDate" column="eff_start_dt" type="java.util.Date"/> -->
+        <!-- <property name="effectiveEndDate" column="eff_end_dt" type="java.util.Date"/> -->
+
+        <!-- <set cascade="none" inverse="true" name="products" table="PROD_CAT"> -->
+        <!-- <key column="CAT_ID"/> -->
+        <!-- <many-to-many column="PROD_ID" class="Product"/> -->
+        <!-- </set> -->
+
+        <!-- <filter name="effectiveDate" condition=":asOfDate BETWEEN eff_start_dt 
+            and eff_end_dt"/> -->
+        <!-- <filter name="unioned"> -->
+        <!-- 'abc' in ( select d.REG from DEPARTMENT d where (d.DEPT_ID=123) union 
+            select p.NAME from SALES_PERSON p ) -->
+        <!-- </filter> -->
+
+    </class>
+
+
+<!--     <class name="PlanetImpl" table="planet"> -->
+<!--         <id name="id" column="planet_id"> -->
+<!--             <generator class="assigned"></generator> -->
+<!--         </id> -->
+<!--         <property name="name" column="planet_name"></property> -->
+<!--         <property name="age"> -->
+<!--             <column name="planet_age"></column> -->
+<!--         </property> -->
+<!--         <set name="person" >    inverse="true" cascade="save-update" -->
+<!--             <key column="planet_id"></key>      person's column -->
+<!--             <one-to-many class="PersonImpl"/> -->
+<!--         </set> -->
+<!--     </class> -->
+</hibernate-mapping>

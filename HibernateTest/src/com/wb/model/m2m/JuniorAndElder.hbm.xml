@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<!--
+  ~ Hibernate, Relational Persistence for Idiomatic Java
+  ~
+  ~ License: GNU Lesser General Public License (LGPL), version 2.1 or later.
+  ~ See the lgpl.txt file in the root directory or <http://www.gnu.org/licenses/lgpl-2.1.html>.
+  -->
+<!DOCTYPE hibernate-mapping
+        SYSTEM
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd" >
+
+<hibernate-mapping package="com.wb.model.m2m">
+
+    <class name="M2MJuniorImpl" table="m2mjunior" proxy="M2MJunior">
+        <id name="id" column="id">
+            <generator class="identity" />
+        </id>
+        
+        <property name="name" column="name" />
+        <property name="age" column="age" />
+        
+        <set name="elder" table="junior_elder" cascade="save-update">
+            <key column="juniorid" />
+            <many-to-many class="M2MElderImpl" column="elderid" />
+        </set>
+        
+    </class>
+
+    <class name="M2MElderImpl" table="m2melder" proxy="M2MElder">
+        <id name="id" column="id">
+            <generator class="identity" />
+        </id>
+        
+        <property name="name" column="name" />
+        <property name="age" column="age" />
+        
+        <set name="junior" table="junior_elder" cascade="save-update">
+            <key column="elderid" />
+            <many-to-many class="M2MJuniorImpl" column="juniorid" />
+                <!-- ca,class="M2MJunior" 是错误的。尽管上面有proxy=。。不会爆出任何信息，只是程序停止 -->
+        </set>
+    </class>
+
+</hibernate-mapping> 
