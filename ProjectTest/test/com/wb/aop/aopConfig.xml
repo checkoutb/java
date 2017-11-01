@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xmlns:tx="http://www.springframework.org/schema/tx"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans    
+                        http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+                        http://www.springframework.org/schema/context
+                        http://www.springframework.org/schema/context/spring-context-3.2.xsd
+                        http://www.springframework.org/schema/aop
+                        http://www.springframework.org/schema/aop/spring-aop-3.2.xsd
+                        http://www.springframework.org/schema/tx
+                        http://www.springframework.org/schema/tx/spring-tx-3.2.xsd">
+                        
+
+    <aop:aspectj-autoproxy />
+
+
+    
+
+    <bean id="funAspect1" class="com.wb.aop.Fun_Aspect">
+<!--         <property name="a" value="589" /> -->
+
+    </bean>
+    
+    <bean id="funPointCut1" class="com.wb.aop.Fun_PointCut">
+    
+    
+    </bean>
+            
+    <aop:config>
+        <aop:aspect id="aspect1" ref="funAspect1">
+<!--             <aop:pointcut expression="execution(public * *(..))" id="cut1"/>            我曹，用这个，debug一直before和rounding互相循环，想了半天，是不是把before和rounding都切进去了。。。 -->
+            
+            <aop:pointcut expression="execution(public * print*Cut1(..))" id="cut1"/>           <!-- 好像不是。。是的，，至少这里debug不会一直循环，，只不过还是不对。只显示before和rounding，不打印其他的。 -->
+            <aop:after method="aspectAfter" pointcut-ref="cut1"/>
+            <aop:before method="aspectBefore" pointcut-ref="cut1"/>
+            <aop:after-returning method="aspectReturning" pointcut-ref="cut1"/>     <!-- 即使切点是void方法，依然有这个。 -->
+            <aop:after-throwing method="aspectThrowing" pointcut-ref="cut1"/>
+<!--             <aop:around method="aspectRounding" pointcut-ref="cut1"/>          不懂，为什么这个around会导致程序运行不对。.好像around比其他的切入方式更吊。 -->
+        
+        <!-- 这个切点的优先级比cut1高。所以printpointCut1是这个的 -->
+        <!-- 看错了，是printPointCut1 被两个切面切入。 -->
+            <aop:pointcut expression="execution(* com.wb.aop.*.*Cut*(..))" id="allCut"/>
+
+            
+            <aop:after method="aspectAfter" pointcut-ref="allCut"/>
+            
+            
+            <aop:after-throwing method="aspectThrowing" pointcut-ref="allCut"/> 
+            <aop:around method="aspectRounding" pointcut-ref="allCut"/>
+            
+                   
+            <aop:before method="aspectBefore" pointcut-ref="allCut"/>
+            
+            <!-- around还是会阻止切点的输出啊。并且如果around在before之前，会使before不运行 -->
+            <!-- fk,debug模式，有around，断点在pointcut方法上，连pointcut都进不去。 -->
+            <!-- 断点在pointcut方法里的话，debug模式，eclipse会报错，springCGLIB的没有行数，断点打不进去， -->
+            <!-- 删除around，断点在方法里，debug，eclipse报错 断点打不进去，，但是还是会在这个断点进入debug界面的。有around的话，方法都进不去 -->
+            
+<!--             mlgb,果然around比其他高级，，around会包含切点，想运行切点方法，就要在around方法里运行， -->
+<!--             around和before等的xml中的顺序 影响，非around在around的内部还是外部 -->
+<!--             before aroundStart pointCut aroundEnd after -->
+<!--             aroundStart before pointCut after aroundEnd -->
+<!--             特别是，around在throwing前面，throwing才能抓到异常，不然抓不到。 -->
+<!--             但是，around把异常抛出，throwing能抓到。 -->
+            
+<!--             是不是，around在前面，会把后面的包含到around中，这样around中有异常发生对throwing就是透明的，就能抓到 -->
+<!--             around在后面，那么前面那些是在around外部的，throwing就看不到around内部有没有异常。 -->
+            <!-- 注解模式和xml是两样的，就是xml中around在throwing之前，aroundcatch，throwing能抓到 -->
+            <!-- 注解无论around，throwing前后，aroundcatch，throwing抓不到 -->
+            <!-- 当然around自己抛出异常，throwing都能抓到,不过应该一次抓切点的异常，一次抓around的异常 -->
+            
+        </aop:aspect>
+        
+        
+        
+    </aop:config>
+
+
+
+
+
+
+</beans>
