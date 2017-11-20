@@ -79,7 +79,9 @@ public class SvnLogToExcel1 {
                 m = p1.matcher(temp);
                 if(m.find())
                 {
+                    //找到svn版本后，应该会找到需求点，如果有人没有写的话，那就把需求点==svn版本，看到后手动修改
                     svnV = Integer.parseInt(m.group().substring(10));
+                    br = String.valueOf(svnV);
 //                    System.out.println(svnV);
                     continue;
                 }

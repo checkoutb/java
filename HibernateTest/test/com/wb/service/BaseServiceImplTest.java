@@ -52,6 +52,32 @@ public class BaseServiceImplTest {
 	
 	
 	
+	
+//	@Ignore
+	@Test
+	public void debugTest()
+	{
+	    Person p = session.get(PersonImpl.class, 13);
+	    
+	    System.out.println(p);
+	}
+	
+	@Ignore
+	@Test
+	public void listNullTest()
+	{
+//	    String sql = "select id from person where id<-10";
+	    
+	    String hql = " from PersonImpl where id<-10";
+	    Query q = session.createQuery(hql);
+	    
+	    List<Person> result = q.list();
+	    
+	    System.out.println(result.size());
+	    
+	}
+	
+	
 	@Ignore
 	@Test
 	public void m2mTest()
